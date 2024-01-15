@@ -12,7 +12,7 @@ const titleClickHandler = function (event) {
     /* [DONE] remove class 'active' from all article links  */
 
     const activeLinks = document.querySelectorAll('.titles a.active');
-    
+
     for (let activeLink of activeLinks) {
         activeLink.classList.remove('active');
     }
@@ -36,10 +36,27 @@ const titleClickHandler = function (event) {
     const hrefAttribute = clickedElement.getAttribute("href");
 
     /* [DONE] find the correct article using the selector (value of 'href' attribute) */
-    
+
     /* [DONE] add class 'active' to the correct article */
-    
+
     document.querySelector(hrefAttribute).classList.add('active')
+}
+
+const generateTitleLinks = function () {
+    
+    // clear link list
+    const linkList = document.querySelectorAll('.sidebar .titles ');
+    for (let link of linkList) {
+        link.innerHTML = "";
+    }
+    // read article id, read title, create HTML, add html
+    const articlesList = document.querySelectorAll('.posts .post');
+    for (let article of articlesList) {
+        const titleId = article.getAttribute('id');
+        const title = article.querySelector('.post-title').innerText;
+        const htmlStr = '<li><a href="#' + title + '"><span>' + title + '</span></a></li>';
+        document.querySelector('.sidebar .titles ').innerHTML += htmlStr
+    }
 }
 
 const links = document.querySelectorAll('.titles a');
@@ -47,3 +64,5 @@ const links = document.querySelectorAll('.titles a');
 for (let link of links) {
     link.addEventListener('click', titleClickHandler);
 }
+
+generateTitleLinks()
