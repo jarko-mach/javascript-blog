@@ -54,6 +54,7 @@ body {
 
 .posts {
   flex: 2 0 0;
+  position: relative;;
 }
 
 .sidebar, .posts {
@@ -102,9 +103,19 @@ body {
 /* Post */
 
 .post {
+  // position: absolute;
   display: none;
+  // left: 500px;
+  // opacity: 0;
+  // color: black;
+  // transition: all 1.2s;
   &.active {
+    // position: absolute;
     display: block;
+    // left: 20px;
+    // opacity: 1;
+    // color: rgb(12, 4, 253);
+    // transition: all 1.2s;
   }
 }
 
