@@ -59,18 +59,18 @@
 
   generateTitleLinks();
 
-  function addClickListenersToTitles() {
+  const addClickListenersToTitles = function() {
     const links = document.querySelectorAll('.titles a');
 
     for (let link of links) {
       link.addEventListener('click', titleClickHandler);
-      console.log('dodaję click')
+
     }
-  }
+  };
 
   addClickListenersToTitles();
 
-  function generateTags() {
+  const generateTags = function() {
     /* find all articles */
     const allArticles = document.querySelectorAll(optArticleSelector);
 
@@ -107,12 +107,12 @@
     }
 
     /* END LOOP: for every article: */
-  }
+  };
 
   generateTags();
 
 
-  function tagClickHandler(event) {
+  const tagClickHandler = function(event) {
     /* prevent default action for this event */
     event.preventDefault();
 
@@ -152,9 +152,9 @@
     /* execute function "generateTitleLinks" with article selector as argument */
     generateTitleLinks(`[data-tags~="${tag}"]`);
 
-  }
+  };
 
-  function addClickListenersToTags() {
+  const addClickListenersToTags = function() {
     /* find all links to tags */
     const allTags = document.querySelectorAll(optArticleTagsLink);
 
@@ -166,11 +166,11 @@
 
       /* END LOOP: for each link */
     }
-  }
+  };
 
   addClickListenersToTags();
 
-  function generateAuthors() {
+  const generateAuthors = function() {
 
     const allArticles = document.querySelectorAll(optArticleSelector);
 
@@ -185,12 +185,12 @@
       autorWraper.insertAdjacentHTML('beforeEnd', htmlVariable);
 
     }
-  }
+  };
 
   generateAuthors();
 
 
-  function authorClickHandler(event) {
+  const authorClickHandler = function(event) {
 
     event.preventDefault();
 
@@ -198,20 +198,20 @@
 
     const href = clickedElement.getAttribute('href');
 
-    const author = href.replace('#author-', "");
+    const author = href.replace('#author-', '');
 
     generateTitleLinks(`[data-author="${author}"]`);
 
-  }
+  };
 
-  function addClickListenersToAuthors() {
+  const addClickListenersToAuthors = function() {
 
     const allAuthors = document.querySelectorAll(optArticleAuthorsSelectorLink);
 
     for (let author of allAuthors) {
-      author.addEventListener('click', authorClickHandler)
+      author.addEventListener('click', authorClickHandler);
     }
-  }
+  };
 
   addClickListenersToAuthors();
 
