@@ -34,7 +34,8 @@
     optArticleTagsSelector = '.post-tags .list',
     optArticleTagsLink = '.post-tags ul li a',
     optArticleAuthorsSelector = '.post-author',
-    optArticleAuthorsSelectorLink = '.post-author a';
+    optArticleAuthorsSelectorLink = '.post-author a',
+    optTagsListSelector = '.tags.list';
 
   const generateTitleLinks = function (customSelector = '') {
 
@@ -59,7 +60,7 @@
 
   generateTitleLinks();
 
-  const addClickListenersToTitles = function() {
+  const addClickListenersToTitles = function () {
     const links = document.querySelectorAll('.titles a');
 
     for (let link of links) {
@@ -70,7 +71,11 @@
 
   addClickListenersToTitles();
 
-  const generateTags = function() {
+  const generateTags = function () {
+
+    /* [NEW] create a new variable allTags with an empty array */
+    let allTags = [];
+
     /* find all articles */
     const allArticles = document.querySelectorAll(optArticleSelector);
 
@@ -93,10 +98,17 @@
       for (let tag of tagsArray) {
 
         /* generate HTML of the link */
-        let tagLink = `<li><a href="#tag-${tag}">${tag}</a></li>`;
+        let linkHTML = `<li><a href="#tag-${tag}">${tag}</a></li>`;
 
         /* add generated code to html variable */
-        htmlVariable += tagLink;
+        htmlVariable += linkHTML;
+
+        /* [NEW] check if this link is NOT already in allTags */
+        if (allTags.indexOf(linkHTML) == -1) {
+
+          /* [NEW] add generated code to allTags array */
+          allTags.push(linkHTML);
+        }
 
         /* END LOOP: for each tag */
       }
@@ -105,14 +117,20 @@
       tagsWrapper.insertAdjacentHTML('beforeEnd', htmlVariable);
 
     }
-
+    
     /* END LOOP: for every article: */
+
+    /* [NEW] find list of tags in right column */
+    const tagList = document.querySelector(optTagsListSelector);
+
+    /* [NEW] add html from allTags to tagList */
+    tagList.innerHTML = allTags.join(' ');
   };
 
   generateTags();
 
 
-  const tagClickHandler = function(event) {
+  const tagClickHandler = function (event) {
     /* prevent default action for this event */
     event.preventDefault();
 
@@ -154,7 +172,7 @@
 
   };
 
-  const addClickListenersToTags = function() {
+  const addClickListenersToTags = function () {
     /* find all links to tags */
     const allTags = document.querySelectorAll(optArticleTagsLink);
 
@@ -170,7 +188,7 @@
 
   addClickListenersToTags();
 
-  const generateAuthors = function() {
+  const generateAuthors = function () {
 
     const allArticles = document.querySelectorAll(optArticleSelector);
 
@@ -190,7 +208,7 @@
   generateAuthors();
 
 
-  const authorClickHandler = function(event) {
+  const authorClickHandler = function (event) {
 
     event.preventDefault();
 
@@ -204,7 +222,7 @@
 
   };
 
-  const addClickListenersToAuthors = function() {
+  const addClickListenersToAuthors = function () {
 
     const allAuthors = document.querySelectorAll(optArticleAuthorsSelectorLink);
 
@@ -214,5 +232,6 @@
   };
 
   addClickListenersToAuthors();
+
 
 }
