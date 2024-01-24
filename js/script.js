@@ -15,7 +15,7 @@
     optCloudClassCount = 5,
     optCloudClassPrefix = 'tag-size-';
 
-    // TITLES
+  // TITLES
 
   const titleClickHandler = function (event) {
 
@@ -41,11 +41,13 @@
   };
 
   const addClickListenersToTitles = function () {
+
     const links = document.querySelectorAll('.titles a');
-    console.log('add click listeners to titles')
+
     for (let link of links) {
       link.addEventListener('click', titleClickHandler);
     }
+
   };
 
   const generateTitleLinks = function (customSelector = '') {
@@ -87,7 +89,6 @@
       if (maxValue <= params[key]) {
         maxValue = params[key];
       };
-      // console.log('key', key, params[key]);
     }
 
     const searchValue = {};
@@ -163,15 +164,13 @@
       /* insert HTML of all the links into the tags wrapper */
       tagsWrapper.insertAdjacentHTML('beforeEnd', htmlVariable);
 
+      /* END LOOP: for every article: */
     }
-
-    /* END LOOP: for every article: */
 
     /* [NEW] find list of tags in right column */
     const tagList = document.querySelector(optTagsListSelector);
 
     const tagsParams = calculateTagsParams(allTags);
-    // console.log('tagsParams:', tagsParams)
 
     /* [NEW] create variable for all links HTML code */
     let allTagsHTML = '';
@@ -205,7 +204,7 @@
 
     /* make a new constant "tag" and extract tag from the "href" constant */
     const tag = href.replace('#tag-', '');
-
+    
     /* find all tag links with class active */
     const tagsActive = document.querySelectorAll('a.active[href^="#tag-"]');
 
@@ -219,7 +218,7 @@
     }
 
     /* find all tag links with "href" attribute equal to the "href" constant */
-    const allTagLinks = document.querySelectorAll(href);
+    const allTagLinks = document.querySelectorAll(`[href="${href}"]`);
 
     /* START LOOP: for each found tag link */
     for (let tagLink of allTagLinks) {
