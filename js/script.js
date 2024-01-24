@@ -4,6 +4,18 @@
 
   'use strict';
 
+  const optArticleSelector = '.post',
+    optTitleSelector = '.post-title',
+    optTitleListSelector = '.titles',
+    optArticleTagsSelector = '.post-tags .list',
+    optArticleTagsLink = '.post-tags ul li a',
+    optArticleAuthorsSelector = '.post-author',
+    optArticleAuthorsSelectorLink = '.post-author a',
+    optTagsListSelector = '.tags.list',
+    optCloudClassCount = 5,
+    optCloudClassPrefix = 'tag-size-';
+
+    // TITLES
 
   const titleClickHandler = function (event) {
 
@@ -28,14 +40,13 @@
     document.querySelector(hrefAttribute).classList.add('active');
   };
 
-  const optArticleSelector = '.post',
-    optTitleSelector = '.post-title',
-    optTitleListSelector = '.titles',
-    optArticleTagsSelector = '.post-tags .list',
-    optArticleTagsLink = '.post-tags ul li a',
-    optArticleAuthorsSelector = '.post-author',
-    optArticleAuthorsSelectorLink = '.post-author a',
-    optTagsListSelector = '.tags.list';
+  const addClickListenersToTitles = function () {
+    const links = document.querySelectorAll('.titles a');
+    console.log('add click listeners to titles')
+    for (let link of links) {
+      link.addEventListener('click', titleClickHandler);
+    }
+  };
 
   const generateTitleLinks = function (customSelector = '') {
 
@@ -56,25 +67,59 @@
       // replace with insertAdjacentHTML
       document.querySelector(optTitleListSelector).insertAdjacentHTML('beforeEnd', articleHtmlStr);
     }
+
+    addClickListenersToTitles();
   };
 
   generateTitleLinks();
 
-  const addClickListenersToTitles = function () {
-    const links = document.querySelectorAll('.titles a');
 
-    for (let link of links) {
-      link.addEventListener('click', titleClickHandler);
+  // TAGS
 
+  const calculateTagsParams = function (params) {
+
+    minValue = 1000000, maxValue = 0;
+
+    for (let key in params) {
+      if (minValue >= params[key]) {
+        minValue = params[key];
+      };
+      if (maxValue <= params[key]) {
+        maxValue = params[key];
+      };
+      // console.log('key', key, params[key]);
     }
-  };
 
-  addClickListenersToTitles();
+    const searchValue = {};
+    searchValue.max = maxValue;
+    searchValue.min = minValue;
+    return searchValue;
+  }
+
+  const calculateTagClass = function (tagCount, allTags) {
+
+    //  read number of css classes
+    let allClass = optCloudClassCount;
+
+    // find maximum value of all tags
+    const maxValue = calculateTagsParams(allTags).max;
+
+    // calculate the rate for a given number
+    let tagRate = tagCount / maxValue;
+
+    // there must be 'allClass'-number answers
+    tagRate *= allClass;
+
+    // round up to integers
+    const tagClass = Math.round(tagRate);
+
+    return optCloudClassPrefix + tagClass;
+  };
 
   const generateTags = function () {
 
-    /* [NEW] create a new variable allTags with an empty array */
-    let allTags = [];
+    /* [NEW] create a new variable allTags with an empty object */
+    let allTags = {};
 
     /* find all articles */
     const allArticles = document.querySelectorAll(optArticleSelector);
@@ -104,10 +149,12 @@
         htmlVariable += linkHTML;
 
         /* [NEW] check if this link is NOT already in allTags */
-        if (allTags.indexOf(linkHTML) == -1) {
+        if (!allTags[tag]) {
 
           /* [NEW] add generated code to allTags array */
-          allTags.push(linkHTML);
+          allTags[tag] = 1;
+        } else {
+          allTags[tag]++;
         }
 
         /* END LOOP: for each tag */
@@ -117,14 +164,30 @@
       tagsWrapper.insertAdjacentHTML('beforeEnd', htmlVariable);
 
     }
-    
+
     /* END LOOP: for every article: */
 
     /* [NEW] find list of tags in right column */
     const tagList = document.querySelector(optTagsListSelector);
 
-    /* [NEW] add html from allTags to tagList */
-    tagList.innerHTML = allTags.join(' ');
+    const tagsParams = calculateTagsParams(allTags);
+    // console.log('tagsParams:', tagsParams)
+
+    /* [NEW] create variable for all links HTML code */
+    let allTagsHTML = '';
+
+    /* [NEW] START LOOP: for each tag in allTags: */
+    for (let tag in allTags) {
+
+      /* [NEW] generate code of a link and add it to allTagsHTML */
+      allTagsHTML += `<li><a class="${calculateTagClass(allTags[tag], allTags)}" href="#tag-${tag}">${tag} (${allTags[tag]})</a></li>`;
+
+    }
+    /* [NEW] END LOOP: for each tag in allTags: */
+
+    /*[NEW] add HTML from allTagsHTML to tagList */
+    tagList.innerHTML = allTagsHTML;
+
   };
 
   generateTags();
@@ -232,6 +295,5 @@
   };
 
   addClickListenersToAuthors();
-
 
 }
