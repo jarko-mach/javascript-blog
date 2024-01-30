@@ -4,26 +4,29 @@
 
   'use strict';
 
-  const optArticleSelector = '.post',
-
-    optTitleSelector = '.post-title',
-    optTitleListSelector = '.titles',
-
-    optArticleTagsSelector = '.post-tags .list',
-    optArticleTagsLink = '.post-tags a',
-
-    optArticleAuthorsSelector = '.post-author',
-    optArticleAuthorsSelectorLink = '.post-author a',
-
-    optAllTagsLink = '[href^="#tag"] a',
-
-    optTagsListSelector = '.tags.list',
-
-    optCloudClassCount = 5,
-    optCloudClassPrefix = 'tag-size-',
-
-    optAuthorsSelector = '.post-authors',
-    optAuthorsListSelector = '.list.authors';
+  const options = {
+    article: {
+      selector: '.post',
+      title: '.post-title',
+      author: '.post-author',
+      content: '.post-content',
+      tags: '.post-tags .list',
+    },
+    lists: {
+      articles: '.list.titles',
+      tags: {
+        selector: '.list.tags',
+        classCount: 5,
+        cloudClassPrefix: 'tag-size-',
+      },
+      authors: '.list.authors',
+    },
+    linksTo: {
+      articles: '.list.titles a',
+      tags: 'a[href^="#tag-"]',
+      authors: 'a[href^="#author-"]',
+    },
+  };
 
   // TITLES
 
@@ -52,7 +55,7 @@
 
   const addClickListenersToTitles = function () {
 
-    const links = document.querySelectorAll('.titles a');
+    const links = document.querySelectorAll(options.linksTo.articles);
 
     for (let link of links) {
       link.addEventListener('click', titleClickHandler);
@@ -63,21 +66,21 @@
   const generateTitleLinks = function (customSelector = '') {
 
     // clear link list
-    const linkList = document.querySelectorAll(optTitleListSelector);
+    const linkList = document.querySelectorAll(options.lists.articles);
 
     for (let link of linkList) {
       link.innerHTML = '';
     }
     // read article id, read title, use insertAdjacentHTML
-    const allArticles = document.querySelectorAll(optArticleSelector + customSelector);
-    
+    const allArticles = document.querySelectorAll(options.article.selector + customSelector);
+
     for (let article of allArticles) {
       const articleId = article.getAttribute('id');
-      const articleTitle = article.querySelector(optTitleSelector).innerText;
+      const articleTitle = article.querySelector(options.article.title).innerText;
       const articleHtmlStr = '<li><a href="#' + articleId + '"><span>' + articleTitle + '</span></a></li>';
       // document.querySelector(optTitleListSelector).innerHTML += articleHtmlStr;
       // replace with insertAdjacentHTML
-      document.querySelector(optTitleListSelector).insertAdjacentHTML('beforeEnd', articleHtmlStr);
+      document.querySelector(options.lists.articles).insertAdjacentHTML('beforeEnd', articleHtmlStr);
     }
 
     addClickListenersToTitles();
@@ -110,7 +113,7 @@
   const calculateTagClass = function (tagCount, allTags) {
 
     //  read number of css classes
-    let allClass = optCloudClassCount;
+    let allClass = options.lists.tags.classCount;
 
     // find maximum value of all tags
     const maxValue = calculateTagsParams(allTags).max;
@@ -124,7 +127,7 @@
     // round up to integers
     const tagClass = Math.round(tagRate);
 
-    return optCloudClassPrefix + tagClass;
+    return options.lists.tags.cloudClassPrefix + tagClass;
   };
 
   const generateTags = function () {
@@ -133,13 +136,13 @@
     let allTags = {};
 
     /* find all articles */
-    const allArticles = document.querySelectorAll(optArticleSelector);
+    const allArticles = document.querySelectorAll(options.article.selector);
 
     /* START LOOP: for every article: */
     for (let article of allArticles) {
 
       /* find tags wrapper */
-      let tagsWrapper = article.querySelector(optArticleTagsSelector);
+      let tagsWrapper = article.querySelector(options.article.tags);
 
       /* make html variable with empty string */
       let htmlVariable = '';
@@ -178,8 +181,7 @@
     }
 
     /* [NEW] find list of tags in right column */
-    const tagList = document.querySelector(optTagsListSelector);
-
+    const tagList = document.querySelector(options.lists.tags.selector);
     const tagsParams = calculateTagsParams(allTags);
 
     /* [NEW] create variable for all links HTML code */
@@ -187,6 +189,7 @@
 
     /* [NEW] START LOOP: for each tag in allTags: */
     for (let tag in allTags) {
+      console.log(tag)
 
       /* [NEW] generate code of a link and add it to allTagsHTML */
       allTagsHTML += `<li><a class="${calculateTagClass(allTags[tag], allTags)}" href="#tag-${tag}">${tag}</a></li>`;
@@ -205,7 +208,7 @@
   const tagClickHandler = function (event) {
     /* prevent default action for this event */
     event.preventDefault();
-    
+
     /* make new constant named "clickedElement" and give it the value of "this" */
     const clickedElement = this;
 
@@ -244,10 +247,10 @@
 
   };
 
-  const addClickListenersToTags = function () {
+  const addClickListenersToArticlesTags = function () {
 
     /* find all links to tags */
-    const allTags = document.querySelectorAll(optArticleTagsLink);
+    const allTags = document.querySelectorAll(options.linksTo.tags);
 
     /* START LOOP: for each link */
     for (let tag of allTags) {
@@ -258,14 +261,14 @@
     }
   };
 
-  addClickListenersToTags();
+  addClickListenersToArticlesTags();
 
   // AUTHORS
 
   const generateAuthors = function () {
 
     let cloudAuthorsHtml = '';
-    
+
     // create table of authors from all posts
     const authorsList = [];
 
@@ -275,7 +278,7 @@
     for (let author of allAuthors) {
 
       let name = author.getAttribute('data-author');
-      
+
       // create link for each post
       let authorHtml = `<li><a class="author-size-1" href="#author-${name}">${name} </a></li>`;
 
@@ -310,10 +313,10 @@
     for (let author of allAuthors) {
       author.classList.remove('active');
     }
-    
+
     // find author name 
     const clickedName = clickedElement.innerText;
-    
+
     // find all html elements with author and selected name
     const allClickedNames = document.querySelectorAll(`[href^="#author-${clickedName}"]`);
     for (let clickedName of allClickedNames) {
