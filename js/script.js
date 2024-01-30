@@ -93,22 +93,22 @@
 
   const calculateTagsParams = function (params) {
 
-    minValue = 1000000, maxValue = 0;
+    let minValue = 1000000, maxValue = 0;
 
     for (let key in params) {
       if (minValue >= params[key]) {
         minValue = params[key];
-      };
+      }
       if (maxValue <= params[key]) {
         maxValue = params[key];
-      };
+      }
     }
 
     const searchValue = {};
     searchValue.max = maxValue;
     searchValue.min = minValue;
     return searchValue;
-  }
+  };
 
   const calculateTagClass = function (tagCount, allTags) {
 
@@ -182,14 +182,12 @@
 
     /* [NEW] find list of tags in right column */
     const tagList = document.querySelector(options.lists.tags.selector);
-    const tagsParams = calculateTagsParams(allTags);
 
     /* [NEW] create variable for all links HTML code */
     let allTagsHTML = '';
 
     /* [NEW] START LOOP: for each tag in allTags: */
     for (let tag in allTags) {
-      console.log(tag)
 
       /* [NEW] generate code of a link and add it to allTagsHTML */
       allTagsHTML += `<li><a class="${calculateTagClass(allTags[tag], allTags)}" href="#tag-${tag}">${tag}</a></li>`;
@@ -247,7 +245,7 @@
 
   };
 
-  const addClickListenersToArticlesTags = function () {
+  const addClickListenersToTags = function () {
 
     /* find all links to tags */
     const allTags = document.querySelectorAll(options.linksTo.tags);
@@ -261,7 +259,7 @@
     }
   };
 
-  addClickListenersToArticlesTags();
+  addClickListenersToTags();
 
   // AUTHORS
 
