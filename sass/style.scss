@@ -87,6 +87,36 @@ body {
   margin: 0;
   padding: 0;
 
+  .tag-size-1 {
+    font-size: 16px;
+    line-height: 10px;
+    text-decoration: none;
+  }
+
+  .tag-size-2 {
+    font-size: 20px;
+    line-height: 14px;
+    text-decoration: none;
+  }
+
+  .tag-size-3 {
+    font-size: 30px;
+    line-height: 28px;
+    text-decoration: none;
+  }
+
+  .tag-size-4 {
+    font-size: 40px;
+    line-height: 35px;
+    text-decoration: none;
+  }
+
+  .tag-size-5 {
+    font-size: 50px;
+    line-height: 40px;
+    text-decoration: none;
+  }
+
   .active {
     font-weight: bold;
   }
@@ -103,32 +133,38 @@ body {
 
 .authors {
   li {
-    margin-bottom: 12px;
+    // margin-bottom: 12px;
   }
+
+  .author-size-1 {
+    font-size: 16px;
+    line-height: 10px;
+    text-decoration: none;
+  }
+
 }
 
 /* Post */
 
 .post {
-  // position: absolute;
-  display: none;
+  position: absolute;
+  left: 500px;
+  opacity: 0;
+  transition: all 1s;
 
-  // left: 500px;
-  // opacity: 0;
-  // color: black;
-  // transition: all 1.2s;
   &.active {
-    // position: absolute;
+    position: absolute;
     display: block;
-    // left: 20px;
-    // opacity: 1;
-    // color: rgb(12, 4, 253);
-    // transition: all 1.2s;
+    left: 20px;
+    right: 20px;
+    opacity: 1;
+    transition: all 1s;
   }
 }
 
 .post-author {
   font-style: italic;
+  list-style-type: none;
 }
 
 .post-tags {
