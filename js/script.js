@@ -4,6 +4,14 @@
 
   'use strict';
 
+  const templates = {
+    articleLink: Handlebars.compile(document.querySelector('#template-article-link').innerHTML),
+    articleTagLink: Handlebars.compile(document.querySelector('#template-article-tag-link').innerHTML),
+    articleAuthorLink: Handlebars.compile(document.querySelector('#template-article-author-link').innerHTML),
+    tagCloudLink: Handlebars.compile(document.querySelector('#tagCloudLink').innerHTML),
+    authorCloudLink: Handlebars.compile(document.querySelector('#authorCloudLink').innerHTML),
+  };
+
   const options = {
     article: {
       selector: '.post',
@@ -77,10 +85,13 @@
     for (let article of allArticles) {
       const articleId = article.getAttribute('id');
       const articleTitle = article.querySelector(options.article.title).innerText;
-      const articleHtmlStr = '<li><a href="#' + articleId + '"><span>' + articleTitle + '</span></a></li>';
-      // document.querySelector(optTitleListSelector).innerHTML += articleHtmlStr;
+      // [WAS] const articleHtmlStr = '<li><a href="#' + articleId + '"><span>' + articleTitle + '</span></a></li>';
+      const linkHTMLData = { id: articleId, title: articleTitle };
+      const linkHTML = templates.articleLink(linkHTMLData);
+      // [REPLACE] document.querySelector(optTitleListSelector).innerHTML += articleHtmlStr;
       // replace with insertAdjacentHTML
-      document.querySelector(options.lists.articles).insertAdjacentHTML('beforeEnd', articleHtmlStr);
+      // [WAS] document.querySelector(options.lists.articles).insertAdjacentHTML('beforeEnd', articleHtmlStr);
+      document.querySelector(options.lists.articles).insertAdjacentHTML('beforeEnd', linkHTML);
     }
 
     addClickListenersToTitles();
@@ -157,8 +168,9 @@
       for (let tag of tagsArray) {
 
         /* generate HTML of the link */
-        let linkHTML = `<li><a href="#tag-${tag}">${tag}</a></li>`;
-
+        // [REPLACE] let linkHTML = `<li><a href="#tag-${tag}">${tag}</a></li>`;
+        const dataArticleTagLink = { tag: tag };
+        let linkHTML = templates.articleTagLink(dataArticleTagLink);
         /* add generated code to html variable */
         htmlVariable += linkHTML;
 
@@ -184,20 +196,26 @@
     const tagList = document.querySelector(options.lists.tags.selector);
 
     /* [NEW] create variable for all links HTML code */
-    let allTagsHTML = '';
+    // [REPLACE] let allTagsHTML = '';
+    const allTagsData = { tags: [] };
 
     /* [NEW] START LOOP: for each tag in allTags: */
     for (let tag in allTags) {
 
       /* [NEW] generate code of a link and add it to allTagsHTML */
-      allTagsHTML += `<li><a class="${calculateTagClass(allTags[tag], allTags)}" href="#tag-${tag}">${tag}</a></li>`;
+      // [REPLACE] allTagsHTML += `<li><a class="${calculateTagClass(allTags[tag], allTags)}" href="#tag-${tag}">${tag}</a></li>`;
+      allTagsData.tags.push({
+        tag: tag,
+        count: allTags[tag],
+        className: calculateTagClass(allTags[tag], allTags),
+      });
 
     }
     /* [NEW] END LOOP: for each tag in allTags: */
 
     /*[NEW] add HTML from allTagsHTML to tagList */
-    tagList.innerHTML = allTagsHTML;
-
+    tagList.innerHTML = templates.tagCloudLink(allTagsData);
+    
   };
 
   generateTags();
@@ -265,7 +283,8 @@
 
   const generateAuthors = function () {
 
-    let cloudAuthorsHtml = '';
+    // [REPLACE] let cloudAuthorsHtml = '';
+    const allAuthorsData = {author: []};
 
     // create table of authors from all posts
     const authorsList = [];
@@ -278,23 +297,32 @@
       let name = author.getAttribute('data-author');
 
       // create link for each post
-      let authorHtml = `<li><a class="author-size-1" href="#author-${name}">${name} </a></li>`;
+      // [REPLACE] let authorHtml = `<li><a class="author-size-1" href="#author-${name}">${name} </a></li>`;
+
+      const dataAuthorLink = { name: name };
+      const authorHtml = templates.articleAuthorLink(dataAuthorLink);
 
       let articleAuthorWrapper = author.querySelector('.post-author');
       articleAuthorWrapper.innerHTML = authorHtml;
+
 
       // add author only if it is not in the table
       if (authorsList.indexOf(name) == -1) {
         authorsList.push(name);
 
         // create html for authors claud
-        cloudAuthorsHtml += authorHtml;
+        // [REPLACE] cloudAuthorsHtml += authorHtml;
+        allAuthorsData.author.push({
+          name: name,
+        });
+
       }
 
     }
 
     let cloudAuthorWrapper = document.querySelector('.list.authors');
-    cloudAuthorWrapper.innerHTML = cloudAuthorsHtml;
+    // [REPLACE] cloudAuthorWrapper.innerHTML = cloudAuthorsHtml;
+    cloudAuthorWrapper.innerHTML = templates.authorCloudLink(allAuthorsData);
 
   };
 

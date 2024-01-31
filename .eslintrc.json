@@ -7,6 +7,9 @@
     "parserOptions": {
         "ecmaVersion": 2015
     },
+    "globals": {
+        "Handlebars": false
+    },
     "rules": {
         "indent": [
             "error",
@@ -18,7 +21,9 @@
         "quotes": [
             "error",
             "single",
-            {"allowTemplateLiterals": true}
+            {
+                "allowTemplateLiterals": true
+            }
         ],
         "semi": [
             "error",
@@ -27,6 +32,8 @@
         "no-console": [
             "off"
         ],
-        "no-prototype-builtins": ["off"]
+        "no-prototype-builtins": [
+            "off"
+        ]
     }
 }
